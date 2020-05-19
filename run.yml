@@ -1,0 +1,32 @@
+---
+- name: Run Jenkins Job
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  vars:
+    oc_bin_path: oc
+    openshift_project: ""
+    jenkins_job_name: ""
+    jenkins_route: "jenkins"
+    build_parameters: []
+    k8s_resources: []
+
+  tasks:
+    - name: Find files
+      find:
+        paths: '/tmp'
+        patterns: '*.yml,*.yaml'
+      register: build_items
+
+    - name: set facts
+      set_fact:
+        k8s_resources: "{{ k8s_resources }} + [ '{{ item.0.path }}' ] + [ '{{ item.1 }}' ]"
+      with_together: 
+        - "{{ build_items.files }}"
+        - ["1"]
+
+    - debug:
+        msg: "{{ item }}"
+      with_items: "{{ k8s_resources }}"
+

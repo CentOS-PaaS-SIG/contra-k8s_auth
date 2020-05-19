@@ -1,0 +1,7 @@
+# kubernetes api server url
+k8s_auth_host: ""
+# credentials to login. ONLY used if not providing k8s_auth_api_key
+k8s_username: ""
+k8s_password: ""
+openshift_project: ""
+
